@@ -8,7 +8,7 @@ ProxRM is a minimalistic client/server application that allows you to remotely s
 - Minimal Setup – Built primarily with default Python modules, keeping dependencies low.
 - Tag-Based Permissions – Integrates with MySQL & LDAP for flexible access control (planned feature).
 - Web Interface – Simple HTML/PHP/JavaScript-based setup and user management.
-- Optimized for Small Deployments – Ideal for HomeLabs and small teams (1-5 users).
+- Optimized for Small Deployments – Ideal for HomeLabs and small teams.
 - Built with: Python, SQL, HTML, PHP, JavaScript
 
 ### Note:
