@@ -5,7 +5,7 @@ dependencies = ["pymysql","hashlib","urllib3","uuid","requests"]
 authors = [
     {name="Tolkosino", email="projects@Tolkosino.de"}
 ]
-description = "A minimalistic Client/Server app to remotely start proxmox VMs"
+description = "A minimalistic Server app to remotely start proxmox VMs - Only Works with ProxRM_Client"
 readme = "README.md"
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -15,5 +15,5 @@ license = "GNU"
 license-files = ["LICENSE"]
 
 [project.urls]
-Homepage  = "https://github.com/Tolkosino/ProxRM"
-Issues = "https://github.com/Tolkosino/ProxRM/issues"
+Homepage  = "https://github.com/Tolkosino/ProxRM_Server"
+Issues = "https://github.com/Tolkosino/ProxRM_Server/issues"
