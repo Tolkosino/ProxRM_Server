@@ -3,8 +3,8 @@ import json
 import selectors
 import struct
 import sys
-import proxmox_handler
-import db_managers.db_userHandler as db_userHandler
+import src.facades.proxFacade as proxFacade
+import logging
 from uuid import uuid5
 
 class Message:
@@ -18,6 +18,7 @@ class Message:
         self.jsonheader = None
         self.request = None
         self.response_created = False
+        self.logger = logging.getLogger(__name__)
 
     def _set_selector_events_mask(self, mode):
         """Set selector to listen for events: mode is 'r', 'w', or 'rw'."""
@@ -28,34 +29,34 @@ class Message:
         elif mode == "rw":
             events = selectors.EVENT_READ | selectors.EVENT_WRITE
         else:
-            raise ValueError(f"Invalid events mask mode {mode!r}.")
+            self.logger.critical(f"Invalid events mask mode {mode!r}!")
+            raise ValueError(f"Invalid events mask mode {mode!r}!")
         self.selector.modify(self.sock, events, data=self)
 
     def _read(self):
         try:
-            # Should be ready to read
             data = self.sock.recv(4096)
         except BlockingIOError:
-            # Resource temporarily unavailable (errno EWOULDBLOCK)
+            self.logger.debug("Resource temporarily unavailable (errno EWOULDBLOCK)")
             pass
         else:
             if data:
                 self._recv_buffer += data
             else:
-                raise RuntimeError("Peer closed.")
+                self.logger.critical("Peer closed!")
+                raise RuntimeError("Peer closed!")
 
     def _write(self):
         if self._send_buffer:
-            print(f"Sending {self._send_buffer!r} to {self.addr}")
+            self.logger.debug(f"Sending {self._send_buffer!r} to {self.addr}")
+
             try:
-                # Should be ready to write
                 sent = self.sock.send(self._send_buffer)
             except BlockingIOError:
-                # Resource temporarily unavailable (errno EWOULDBLOCK)
+                self.logger.debug("Resource temporarily unavailable (errno EWOULDBLOCK)")
                 pass
             else:
                 self._send_buffer = self._send_buffer[sent:]
-                # Close when the buffer is drained. The response has been sent.
                 if sent and not self._send_buffer:
                     self.close()
 
@@ -121,21 +122,18 @@ class Message:
         self._write()
 
     def close(self):
-        print(f"Closing connection to {self.addr}")
+        self.logger.info(f"Closing connection to {self.addr}")
+
         try:
             self.selector.unregister(self.sock)
         except Exception as e:
-            print(
-                f"Error: selector.unregister() exception for "
-                f"{self.addr}: {e!r}"
-            )
+            self.logger.warning(f"Error: selector.unregister() exception for {self.addr}: {e!r}")
 
         try:
             self.sock.close()
         except OSError as e:
-            print(f"Error: socket.close() exception for {self.addr}: {e!r}")
+            self.logger.warning(f"Error: socket.close() exception for {self.addr}: {e!r}")
         finally:
-            # Delete reference to socket object for garbage collection
             self.sock = None
 
     def process_protoheader(self):
@@ -160,6 +158,7 @@ class Message:
                 "content-encoding",
             ):
                 if reqhdr not in self.jsonheader:
+                    self.logger.warning(f"Missing required header '{reqhdr}'.")
                     raise ValueError(f"Missing required header '{reqhdr}'.")
 
     def process_request(self):
@@ -171,15 +170,11 @@ class Message:
         if self.jsonheader["content-type"] == "text/json":
             encoding = self.jsonheader["content-encoding"]
             self.request = self._json_decode(data, encoding)
-            print(f"Received request {self.request!r} from {self.addr}")
+            self.logger.info(f"Received request {self.request!r} from {self.addr}")
         else:
-            # Binary or unknown content-type
             self.request = data
-            print(
-                f"Received {self.jsonheader['content-type']} "
-                f"request from {self.addr}"
-            )
-        # Set selector to listen for write events, we're done reading.
+            self.logger.debug(f"Received {self.jsonheader['content-type']} request from {self.addr}")
+
         self._set_selector_events_mask("w")
 
     def create_response(self):
@@ -209,87 +204,35 @@ class Message:
         }
         return response
     
-    def get_connection(self):
-        session, apiheaders = proxmox_handler.proxmox_connect()
-        if session == "FAILED:":
-            proxmox_handler.send_wolPackage() ## Host is offline
-        else:
-            return session, apiheaders
-    
-    def set_vmAction(self, action, value, session_id):
-        vmID = value
-        
-        if db_userHandler.check_session_id(session_id, ""):
-            session, apiheaders = self.get_connection()
-            if vmID == "pve":
-                return proxmox_handler.set_hostAction(action, session, apiheaders)
-            return proxmox_handler.set_vmAction(action, vmID ,session, apiheaders)
-        elif session_id == "REQUESTED":
-            return "Access Denied but Session id Requested"
-        else:
-            return "Access Denied"
-            
-    def get_vmStatus(self, value, session_id):
-        vmID = value
-        
-        if db_userHandler.check_session_id(session_id):
-            session, apiheaders = self.get_connection()
-            response = proxmox_handler.get_vmStatus(session, apiheaders, vmID)
-            res = ' '
-            print(f"getStatus response be like {response}")
-            res = res.join(str(response))
-            return res
-        elif session_id == "REQUESTED":
-            return "Access Denied but Session id Requested"
-        else:
-            return "Access Denied"
-        
-    def authenticate_user(self, param):
-        username = param.split(";")[0]
-        password = param.split(";")[1]
-                
-        if not db_userHandler.auth_user(username, password) == False:
-            session_key = uuid5()
-            return f"authn_{username}_accept;{session_key}" ##User authenticated
-        else:
-            return f"authn_{password}_deny" ##Login denied
-        
-    def get_VMsForUser(self, value, session_id):
-        vms = db_userHandler.get_vms_for_user_permission(session_id)
-        return ";".join(vms)
         
     def _exec_remoteTask(self, original_task, value, session_id):
-        task = original_task.split(";")[0]
-        match task:                                     
-            case "get_VMList":                          ##Should be smth like "get_VMList;[session_id]"
-                res = self.get_VMsForUser(value, session_id) 
-            case "get_VMStatus":                        ##Should be smth like "get_VMStatus;[session_id]"
-                res = self.get_vmStatus(value, session_id)
-            case "set_VMAction":                        ##Should be smth like "set_VMAction;start;[session_id]" or "set_VMAction;stop;[session_id]"
-                res = self.set_vmAction(original_task.split(";")[1], value, session_id)
-            case "auth_User":                           ##Should be smth like "[username];[password]"
-                res = self.authenticate_user(value)     
-            case _: #default case if no match
-                print("Unsupported value in vm task-selection!")
-                res = "Unsupported value in vm task-selection!"
-        return res
+        return proxFacade.executeAction(original_task, value, session_id)
+        
+
     
     
     '''
-    Task = 
-    set_vmAction;start;[session id]
-    value =
-    [vmid]
-    
-    Task = 
-    set_vmAction;start
-    value =
-    [vmid];[session id]
-    
-    
-    session_id
-    Task
-    Value
-    
-    
+    every request has:
+    {
+        session_id = [session_id]
+        vm = [vmid]
+    }
+
+    with following pairs of Task and action:
+    {
+        Task = [set_vmAction]
+        Action = [start|stop]
+    },
+    {    
+        Task = [get_VMList]
+        Action = []
+    },
+    {    
+        Task = [get_VMStatus]
+        Action = []
+    },
+    {
+        Task = [auth_User]
+        Action = [[username];[password]]
+    }   
     '''
