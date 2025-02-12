@@ -1,0 +1,19 @@
+[database]
+DB_HOST = "funnywol_db"
+DB_USER = "root"
+DB_PASSWORD = "Start123"
+DB_DATABASE = "wolserver"
+
+[proxmox]
+NODENAME =  "XXX"
+PROX_HOST = "XXX.XXX.XXX.XXX"
+PROX_TOKEN = "XXXX@XXX!XXX"
+PROX_SECRET = "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+
+[proxrm_server]
+HOST = "127.0.0.1"
+PORT = 35560
+
+[logging]
+LOGFILE = "XXX.log"
+LOGLEVEL = "INFO"

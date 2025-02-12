@@ -1,20 +1,20 @@
 import requests
 import urllib3
 import logging
-from facades import ConfigFacade
-
+from config import Config
 
 class prox():
     
     def __init__(self):
         urllib3.disable_warnings()
-        self.config = ConfigFacade.load()
         self.logger = logging.getLogger(__name__)
         
-        self.nodename = self.config["NODENAME"]
-        self.prox_host = self.config["PROX_HOST"]
-        self.prox_token = self.config["PROX_TOKEN"]
-        self.prox_secret = self.config["PROX_SECRET"]
+        self.conf = Config()
+        self.conf_proxmox = self.conf.get_proxmox()
+        self.nodename = self.conf_proxmox["NODENAME"]
+        self.prox_host = self.conf_proxmox["PROX_HOST"]
+        self.prox_token = self.conf_proxmox["PROX_TOKEN"]
+        self.prox_secret = self.conf_proxmox["PROX_SECRET"]
 
     def _proxmox_connect(self):    
         headers = { "Authorization": "PVEAPIToken="+self.prox_token+"="+self.prox_secret}

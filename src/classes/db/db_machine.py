@@ -1,18 +1,19 @@
+from config import Config
+
 import facades.proxFacade as proxFacade
-import facades.configFacade as configFacade
 import pymysql
 import logging
 import time
 
 class DB_Machine():
     def __init__(self):
-        self.config = configFacade.load()
         self.logger = logging.getLogger(__name__)
-        
-        self.HOST = self.config["DB_HOST"]
-        self.USER = self.config["DB_USER"]
-        self.PASSWORD = self.config["DB_PASSWORD"]
-        self.DATABASE = self.config["DB_DATABASE"]
+        self.conf = Config()
+        self.conf_database = self.conf.get_database()
+        self.HOST = self.conf_database["DB_HOST"]
+        self.USER = self.conf_database["DB_USER"]
+        self.PASSWORD = self.conf_database["DB_PASSWORD"]
+        self.DATABASE = self.conf_database["DB_DATABASE"]
 
     def _connect_db(self):
         """ Create database connection."""
