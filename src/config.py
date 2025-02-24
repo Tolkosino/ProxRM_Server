@@ -13,13 +13,15 @@ class Config():
     def _set_logLevel(self):
         match self.config["logging"]["LOGLEVEL"]:
             case "INFO":
-                self.self.config["logging"]["LOGLEVEL"] = logging.INFO
+                self.config["logging"]["LOGLEVEL"] = logging.INFO
             case "DEBUG":
-                self.self.config["logging"]["LOGLEVEL"] = logging.DEBUG
+                self.config["logging"]["LOGLEVEL"] = logging.DEBUG
             case "WARNING":
-                self.self.config["logging"]["LOGLEVEL"] = logging.WARNING
+                self.config["logging"]["LOGLEVEL"] = logging.WARNING
             case "CRITICAL":
-                self.self.config["logging"]["LOGLEVEL"] = logging.CRITICAL
+                self.config["logging"]["LOGLEVEL"] = logging.CRITICAL
+            case _:
+                self.config["logging"]["LOGLEVEL"] = logging.INFO
 
     def get_database(self):
         return self.config["database"]

@@ -1,6 +1,6 @@
 [project]
 name = "ProxRM_Server"
-version = "0.1"
+version = "0.2"
 dependencies = ["pymysql","hashlib","urllib3","uuid","requests", logging]
 authors = [
     {name="Tolkosino", email="projects@Tolkosino.de"}
