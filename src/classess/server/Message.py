@@ -188,11 +188,6 @@ class Message:
         self._send_buffer += message
 
     def _create_response_json_content(self):
-         
-        command = self.request.get("command")
-        action = self.request.get("action")
-        vmid = self.request.get("vmid")
-        session_id = self.request.get("session_id")
         
         answer = self._exec_remoteTask(self.request)
  
