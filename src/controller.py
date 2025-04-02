@@ -1,22 +1,27 @@
-import sys
 import logging
-from classes.server import Server
-from config import Config
+from classess.server.Server import Server
+from classess.db.controller import DB_Controller
+from classess.db.machine import DB_Machine
+from classess.config.config import Config
 
 def main():
     """Setup and main execution loop."""
-    conf_logger = Config.get_logging()
-    conf_proxrm_server = Config.get_proxrm_server
+    config = Config()
+    conf_logger = config.get_logging()
+    conf_proxrm_server = config.get_proxrm_server()
 
     logging.basicConfig(filename=conf_logger["LOGFILE"], level=conf_logger["LOGLEVEL"])
     logger = logging.getLogger(__name__)
 
-    if len(sys.argv) != 2:
-        logger.critical(f"Wrong parameters, usage: {sys.argv[0]} <port>")
-        sys.exit(1)
-    else:
-        logger.info(f"Starting Server on {conf_proxrm_server["HOST"]}:{conf_proxrm_server["PORT"]}")
-        Server.start()
+    logger.info(f"Load DB Connection and setup as needed...")
+    db_controller = DB_Controller()
+    db_controller.setup_db()
+    machine_handler = DB_Machine()
+    #machine_handler.reload_local_database()
+
+    logger.info(f"Starting Server on {conf_proxrm_server["HOST"]}:{conf_proxrm_server["PORT"]}")
+    server = Server(conf_proxrm_server["HOST"], conf_proxrm_server["PORT"], conf_logger["LOGFILE"])
+    server.start()
 
 if __name__ == "__main__":
     main()

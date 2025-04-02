@@ -3,7 +3,7 @@ import json
 import selectors
 import struct
 import sys
-import src.facades.proxFacade as proxFacade
+from proxFacade import ProxFacade
 import logging
 from uuid import uuid5
 
@@ -189,11 +189,12 @@ class Message:
 
     def _create_response_json_content(self):
          
+        command = self.request.get("command")
         action = self.request.get("action")
-        value = self.request.get("value")
+        vmid = self.request.get("vmid")
         session_id = self.request.get("session_id")
         
-        answer = self._exec_remoteTask(action, value, session_id)
+        answer = self._exec_remoteTask(self.request)
  
         content = {"result": answer}    
         content_encoding = "utf-8"
@@ -204,13 +205,11 @@ class Message:
         }
         return response
     
-        
-    def _exec_remoteTask(self, original_task, value, session_id):
-        return proxFacade.executeAction(original_task, value, session_id)
-        
+    def _exec_remoteTask(self, cmd_set):
+        proxFacade = ProxFacade()
+        return proxFacade.executeAction(cmd_set)
 
-    
-    
+
     '''
     every request has:
     {

@@ -1,18 +1,17 @@
-#!/usr/bin/env python3
-
+from classess.server.Message import Message
 import selectors
 import socket
 import traceback
-from Message import Message
 import logging
 
 class Server:
     
-    def __init__(self,  HOST: str, PORT: int, logLevel : logging._Level, logfile : str):
+    def __init__(self,  HOST: str, PORT: int, logfile : str):
         self.logger = logging.getLogger(__name__)
         self.sel = selectors.DefaultSelector()
         self.HOST = HOST
         self.PORT = PORT
+        self.logger.info(f"Server assigned Address: {self.HOST}:{self.PORT}")
 
     def start(self):
         lsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
