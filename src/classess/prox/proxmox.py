@@ -2,6 +2,7 @@ import requests
 import urllib3
 import logging
 from classess.config.config import Config
+from wakeonlan import send_magic_packet
 
 class Proxmox:
     
@@ -15,6 +16,7 @@ class Proxmox:
         self.prox_host = self.conf_proxmox["PROX_HOST"]
         self.prox_token = self.conf_proxmox["PROX_TOKEN"]
         self.prox_secret = self.conf_proxmox["PROX_SECRET"]
+        self.prox_mac_address = self.conf_proxmox["MAC"]
         self.headers = {
             "Authorization": f"PVEAPIToken={self.prox_token}={self.prox_secret}"
         }
@@ -72,6 +74,7 @@ class Proxmox:
 
     def _send_wol_package(self):
         """Simulate Wake-on-LAN."""
+        send_magic_packet(self.prox_mac_address)
         self.logger.info("Wake-on-LAN signal sent to server.")
         return "Wake-on-LAN signal sent to server."
 
