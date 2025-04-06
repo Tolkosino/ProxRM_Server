@@ -21,3 +21,7 @@ class CommandFactory:
             print(cls._events)
             raise ValueError(f"Unknown Notification type: {type}")
         return cls._events[type]()
+    
+    @classmethod
+    def get_commands(cls):
+        return cls._events

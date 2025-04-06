@@ -13,8 +13,7 @@ class set_hostaction(commandBase):
             response = requests.get(url, headers=self.headers, verify=False)
             response.raise_for_status()
             data = response.json().get('data', {})
-
-            return {
+            status = {
                 "status": data.get("qmpstatus"),
                 "maxmem_GB": data.get("maxmem", 0) / 1e9,
                 "maxdisk_GB": data.get("maxdisk", 0) / 1e9,
@@ -23,8 +22,10 @@ class set_hostaction(commandBase):
                 "diskwrite": data.get("diskwrite"),
                 "diskread": data.get("diskread"),
                 "cpus": data.get("cpus"),
-                "uptime": data.get("uptime"),
+                "uptime": data.get("uptime")
             }
+            return status.join(str(status))
+        
         except requests.RequestException as e:
             self.logger.warning(f"Failed to fetch VM status for {vmid}: {e}")
             return None

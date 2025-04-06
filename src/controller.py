@@ -1,4 +1,5 @@
 import logging
+from classess.loader import registry
 from classess.server.Server import Server
 from classess.db.controller import DB_Controller
 from classess.db.machine import DB_Machine
@@ -17,8 +18,8 @@ def main():
     db_controller = DB_Controller()
     db_controller.setup_db()
     machine_handler = DB_Machine()
-    #machine_handler.reload_local_database()
-
+    machine_handler.reload_local_database()
+    
     logger.info(f"Starting Server on {conf_proxrm_server["HOST"]}:{conf_proxrm_server["PORT"]}")
     server = Server(conf_proxrm_server["HOST"], conf_proxrm_server["PORT"], conf_logger["LOGFILE"])
     server.start()
