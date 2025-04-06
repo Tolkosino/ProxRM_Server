@@ -1,6 +1,6 @@
 from classess.commands.commandBase import CommandBase
 
-class set_hostaction(CommandBase):
+class get_vmstatus(CommandBase):
     
     def execute(self, **kwargs):
         import requests
@@ -24,7 +24,7 @@ class set_hostaction(CommandBase):
                 "cpus": data.get("cpus"),
                 "uptime": data.get("uptime")
             }
-            return status.join(str(status))
+            return status
         
         except requests.RequestException as e:
             self.logger.warning(f"Failed to fetch VM status for {vmid}: {e}")
