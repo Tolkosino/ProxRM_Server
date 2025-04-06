@@ -3,19 +3,20 @@ import importlib
 import sys
 import logging
 from classess.loader import command_factory
-from classess.commands import CommandBase
+from classess.commands.commandBase import CommandBase
 
 #Appending plugins folder as search path for importlib
 sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 
 PLUGINS_PACKAGE = "commands"
 LOGGER = logging.getLogger(__name__)
+CURRDIR = os.path.dirname(__file__)
 
 def load_plugins():
     #Rotating through all files in appended path to import various plugins later
-    for filename in os.listdir(os.path.join(os.path.dirname(__file__), PLUGINS_PACKAGE)):
-        if filename.endswith(".py") and filename not in ["__init__.py", "base.py"]:
-            module_name = f"{PLUGINS_PACKAGE}.{filename[:-3]}"
+    for filename in os.listdir(os.path.join(os.path.dirname(CURRDIR), PLUGINS_PACKAGE)):
+        if filename.endswith(".py") and filename not in ["__init__.py", "commandBase.py"]:
+            module_name = f"classess.{PLUGINS_PACKAGE}.{filename[:-3]}"
             LOGGER.info(f"Importing module: {module_name} ...")
             module = importlib.import_module(module_name)
 

@@ -1,6 +1,6 @@
-from classess.commands import commandBase
+from classess.commands.commandBase import CommandBase
 
-class set_vmaction(commandBase):
+class set_vmaction(CommandBase):
 
     def execute(self, **kwargs):
         import requests

@@ -1,6 +1,6 @@
-from classess.commands import commandBase
+from classess.commands.commandBase import CommandBase
 
-class get_allvms(commandBase):
+class get_allvms(CommandBase):
     
     def execute(self, **kwargs):
         from classess.db.user import DB_User

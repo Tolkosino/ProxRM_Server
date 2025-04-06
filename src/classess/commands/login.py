@@ -1,6 +1,6 @@
-from classess.commands import commandBase
+from classess.commands.commandBase import CommandBase
 
-class login(commandBase):
+class login(CommandBase):
 
     def execute(self, **kwargs):
         from classess.db.user import DB_User

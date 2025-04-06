@@ -1,6 +1,6 @@
-from classess.commands import commandBase
+from classess.commands.commandBase import CommandBase
 
-class set_hostaction(commandBase):    
+class logout(CommandBase):    
 
     def execute(self, **kwargs):
         from classess.db.user import DB_User
