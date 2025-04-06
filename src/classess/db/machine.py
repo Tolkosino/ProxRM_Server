@@ -54,18 +54,24 @@ class DB_Machine:
                 "INSERT INTO wol_machines (id, name, tags) VALUES (%s, %s, %s)",
                 (vmid, name, tags),
             )
-        self.logger.info(f"Added machine to DB (ID {vm})")
+        self.logger.info(f"Added machine to DB (ID {vmid})")
 
     def reload_local_database(self):
         """Synchronizes the local database with Proxmox VMs."""
         self.logger.info("Starting update of local VM database")
-        prox_facade = ProxFacade()
-        vms = prox_facade.get_vms()
+        machines = None
+        with DatabaseConnection(self.DATABASE_INFO) as cursor:
+            cursor.execute("SELECT id, tags, name FROM wol_machines")
+            machines = cursor.fetchall()
+        
+        dict_machines = dict()
         current_existent_vms = set()
-        self.logger.debug(f"VM-Set collected from Proxmox: {vms}")
+        self.logger.debug(f"VM-Set collected from Proxmox: {machines}")
+        for machine in machines:
+            dict_machines[machine[0]] = {"tags": machine[1], "name": machine[2]}
 
         with DatabaseConnection(self.DATABASE_INFO) as cursor:
-            for vm, details in vms.items():
+            for vm, details in dict_machines.items():
                 cursor.execute("SELECT id FROM wol_machines WHERE id = %s", (vm,))
                 exists = cursor.fetchone()
 

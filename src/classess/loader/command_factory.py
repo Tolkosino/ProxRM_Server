@@ -9,7 +9,7 @@ class CommandFactory:
 
 
     @classmethod
-    def register_commands(cls, name, event_cls):
+    def register_command(cls, name, event_cls):
         cls._logger.debug(f"Registering Plugin: {name}")
         cls._events[name] = event_cls
 

@@ -2,7 +2,7 @@ import os
 import importlib
 import sys
 import logging
-from classess.loader import command_factory
+from classess.loader.command_factory import CommandFactory 
 from classess.commands.commandBase import CommandBase
 
 #Appending plugins folder as search path for importlib
@@ -28,7 +28,7 @@ def load_plugins():
                     # Explicitly check if it's a subclass of BaseCommand (skip BaseCOmmand itself)
                     if obj is not CommandBase and issubclass(obj, CommandBase):
                         LOGGER.debug(f"Registering {name} as {name.lower()}")  # Debugging the registration
-                        command_factory.register_command(name.lower(), obj)
+                        CommandFactory.register_command(name.lower(), obj)
                     else:
                         LOGGER.debug(f"{name} does not meet the subclass condition.")  # For debugging only
 
