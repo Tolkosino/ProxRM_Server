@@ -203,30 +203,3 @@ class Message:
     def _exec_remoteTask(self, cmd_set):
         proxFacade = ProxFacade()
         return proxFacade.executeAction(cmd_set)
-
-
-    '''
-    every request has:
-    {
-        session_id = [session_id]
-        vm = [vmid]
-    }
-
-    with following pairs of Task and action:
-    {
-        Task = [set_vmAction]
-        Action = [start|stop]
-    },
-    {    
-        Task = [get_VMList]
-        Action = []
-    },
-    {    
-        Task = [get_VMStatus]
-        Action = []
-    },
-    {
-        Task = [auth_User]
-        Action = [[username];[password]]
-    }   
-    '''

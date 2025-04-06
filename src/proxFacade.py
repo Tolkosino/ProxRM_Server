@@ -1,7 +1,8 @@
 from classess.prox.proxmox import Proxmox
 from classess.db.user import DB_User
+from classess.loader import command_factory
 import logging
-import uuid
+
 
 class ProxFacade:
     def __init__(self):
@@ -15,6 +16,15 @@ class ProxFacade:
         vmid = cmd_set.get('vmid') # 102
         session_id = cmd_set.get('session_id') # 6546516-asd858746sd-12316tsdf
         
+        if command in command_factory.get_commands():
+            command = command_factory.register_commands(command)
+            res = command.execute(vmid=vmid, action=action, session_id=session_id)
+        
+        return res
+
+        
+        '''
+        FIXME: REMOVE DIS BITCH
         match command:                                     
             case "get_VMList":                          ##Should be smth like "get_VMList;[session_id]"
                 res = self.get_VMsForUser(session_id) 
@@ -33,8 +43,8 @@ class ProxFacade:
             case _: #default case if no match
                 self.logger.warning(f"Unsupported value in vm task-selection! {command} - recieved")
                 res = "Unsupported value in vm task-selection!"
-        return res
-
+        '''
+        
     def create_vm(cmd_set):
         pass
 

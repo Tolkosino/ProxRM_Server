@@ -21,18 +21,6 @@ class Proxmox:
             "Authorization": f"PVEAPIToken={self.prox_token}={self.prox_secret}"
         }
 
-    def proxmox_connect(self):    
-        """Test Proxmox connection and return headers if successful."""
-        url = f"https://{self.prox_host}:8006/api2/json/version"
-        
-        try:
-            response = requests.get(url, headers=self.headers, verify=False)
-            response.raise_for_status()
-            return self.headers
-        except requests.RequestException as e:
-            self.logger.critical(f"Proxmox connection failed: {e}")
-            raise RuntimeError(f"Proxmox connection failed: {e}")
-
     def get_all_vms(self):
         """Retrieve all VMs from the cluster."""
         url = f"https://{self.prox_host}:8006/api2/json/cluster/resources?type=vm"
