@@ -1,5 +1,5 @@
-from classess.db.user import DB_User
-from classess.loader.command_factory import CommandFactory
+from classes.db.user import DB_User
+from classes.loader.command_factory import CommandFactory
 import logging
 
 
