@@ -1,9 +1,9 @@
-from classess.commands.commandBase import CommandBase
+from classes.commands.commandBase import CommandBase
 
 class get_vmlist(CommandBase):
     
     def execute(self, **kwargs):
-        from classess.db.user import DB_User
+        from classes.db.user import DB_User
         
         self.logger.debug("")
         session_id = kwargs.get("session_id")

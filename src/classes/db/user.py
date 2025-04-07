@@ -1,8 +1,8 @@
 import uuid
 import bcrypt
 import logging
-from classess.db.helper import DatabaseConnection
-from classess.config.config import Config
+from classes.db.helper import DatabaseConnection
+from classes.config.config import Config
 
 class DB_User:
     def __init__(self):

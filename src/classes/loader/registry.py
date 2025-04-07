@@ -2,8 +2,8 @@ import os
 import importlib
 import sys
 import logging
-from classess.loader.command_factory import CommandFactory 
-from classess.commands.commandBase import CommandBase
+from classes.loader.command_factory import CommandFactory
+from classes.commands.commandBase import CommandBase
 
 #Appending plugins folder as search path for importlib
 sys.path.append(os.path.abspath(os.path.dirname(__file__)))

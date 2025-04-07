@@ -1,5 +1,5 @@
-from classess.db.helper import DatabaseConnection
-from classess.config.config import Config
+from classes.db.helper import DatabaseConnection
+from classes.config.config import Config
 from proxFacade import ProxFacade
 import logging
 

@@ -1,4 +1,4 @@
-from classess.commands.commandBase import CommandBase
+from classes.commands.commandBase import CommandBase
 
 class logout(CommandBase):    
 
