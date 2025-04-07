@@ -1,6 +1,6 @@
-from classes.db.helper import DatabaseConnection
-from classes.config.config import Config
-from proxFacade import ProxFacade
+from src.classes.db.helper import DatabaseConnection
+from src.classes.config.config import Config
+from src.proxFacade import ProxFacade
 import logging
 
 class DB_Machine:

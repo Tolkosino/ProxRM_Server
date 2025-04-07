@@ -1,4 +1,4 @@
-from classes.server.Message import Message
+from src.classes.server.Message import Message
 import selectors
 import socket
 import traceback

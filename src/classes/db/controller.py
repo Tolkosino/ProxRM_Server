@@ -1,5 +1,5 @@
-from classes.db.helper import DatabaseConnection
-from classes.config.config import Config
+from src.classes.db.helper import DatabaseConnection
+from src.classes.config.config import Config
 import pymysql
 import urllib3
 import logging

@@ -1,4 +1,4 @@
-from classes.commands.commandBase import CommandBase
+from src.classes.commands.commandBase import CommandBase
 
 class set_hostaction(CommandBase):
 

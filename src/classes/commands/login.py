@@ -1,9 +1,9 @@
-from classes.commands.commandBase import CommandBase
+from src.classes.commands.commandBase import CommandBase
 
 class login(CommandBase):
 
     def execute(self, **kwargs):
-        from classess.db.user import DB_User
+        from src.classes.db.user import DB_User
         username = kwargs.get("action")
         password = kwargs.get("vmid")
         self.logger.debug(f"{username}, {password}")

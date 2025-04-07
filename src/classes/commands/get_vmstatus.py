@@ -1,4 +1,4 @@
-from classes.commands.commandBase import CommandBase
+from src.classes.commands.commandBase import CommandBase
 
 class get_vmstatus(CommandBase):
     
