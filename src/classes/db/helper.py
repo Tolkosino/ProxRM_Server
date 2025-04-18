@@ -9,9 +9,9 @@ class DatabaseConnection:
         """
         Initializes the database connection manager.
 
-        :param database_info: Tuple containing (host, user, password, database).
+        :param database_info: Tuple containing (host, user, password, database, port).
         """
-        self.HOST, self.USER, self.PASSWORD, self.DATABASE = database_info
+        self.HOST, self.USER, self.PASSWORD, self.DATABASE, self.PORT = database_info
         self.logger = logging.getLogger(__name__)
         self.conn = None  # Initialize connection attribute
 
@@ -28,6 +28,7 @@ class DatabaseConnection:
                 self.conn = pymysql.connect(
                     host=self.HOST,
                     user=self.USER,
+                    port=self.PORT,
                     password=self.PASSWORD,
                     database=self.DATABASE,
                     autocommit=True

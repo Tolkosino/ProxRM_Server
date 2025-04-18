@@ -1,5 +1,4 @@
 import logging
-from classes.loader import registry
 from classes.server.Server import Server
 from classes.db.controller import DB_Controller
 from classes.db.machine import DB_Machine

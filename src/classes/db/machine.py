@@ -14,6 +14,7 @@ class DB_Machine:
             self.conf_database["DB_USER"],
             self.conf_database["DB_PASSWORD"],
             self.conf_database["DB_DATABASE"],
+            self.conf_database["DB_PORT"]
         )
 
     def _remove_deleted_vms(self, prox_existent_vms):

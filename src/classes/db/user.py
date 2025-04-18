@@ -15,6 +15,7 @@ class DB_User:
             self.conf_database["DB_USER"],
             self.conf_database["DB_PASSWORD"],
             self.conf_database["DB_DATABASE"],
+            self.conf_database["DB_PORT"]
         ]
 
     def _hash_password(self, password):

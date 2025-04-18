@@ -19,6 +19,7 @@ class DB_Controller:
         self.USER = conf_database["DB_USER"]
         self.PASSWORD = conf_database["DB_PASSWORD"]
         self.DATABASE = conf_database["DB_DATABASE"]
+        self.PORT = conf_database["DB_PORT"]
 
     def setup_db(self):
         """Creates database and tables if they do not exist."""
@@ -28,6 +29,7 @@ class DB_Controller:
                     self.conn = pymysql.connect(
                         host=self.HOST,
                         user=self.USER,
+                        port=self.PORT,
                         password=self.PASSWORD,
                         autocommit=True
                     )

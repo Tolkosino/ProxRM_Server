@@ -1,8 +1,9 @@
 [database]
-DB_HOST = "192.168.178.28"
+DB_HOST = "funnywol_DB"
 DB_USER = "proxrm_admin"
 DB_PASSWORD = "Start123#"
 DB_DATABASE = "wolserver"
+DB_PORT = 3306
 
 [proxmox]
 NODENAME =  "pve"
