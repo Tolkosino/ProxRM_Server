@@ -13,3 +13,6 @@ ProxRM is a minimalistic client/server application that allows you to remotely s
 
 ### Note:
 Security is not the primary focus, as this project is not developed with deep security expertise. However, efforts are made to implement reasonable security measures where possible. Use at your own risk, especially in untrusted environments.
+
+
+
