@@ -1,7 +1,7 @@
 [project]
 name = "ProxRM_Server"
 version = "0.2"
-dependencies = ["pymysql","hashlib","urllib3","uuid","requests", "logging", "wakeonlan"]
+dependencies = ["pymysql","urllib3","uuid","requests", "logging", "wakeonlan"]
 authors = [
     {name="Tolkosino", email="projects@Tolkosino.de"}
 ]
