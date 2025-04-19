@@ -7,7 +7,7 @@ from abc import ABC, abstractmethod
 class CommandBase:
 
     def __init__(self):
-        from src.classes.config.config import Config
+        from classes.config.config import Config
         import urllib3
         import logging
         
