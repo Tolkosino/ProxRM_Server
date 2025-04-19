@@ -38,6 +38,11 @@ jobs:
         with:
           images: togglo/proxrm_server
 
+<<<<<<< HEAD
+      - name: Build and push Docker image
+        id: push
+        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+=======
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       
@@ -47,13 +52,17 @@ jobs:
       - name: Build and push Docker image
         id: push
         uses: docker/build-push-action@v3
+>>>>>>> 9ca9ddd5a27b7b5a91f0ab2a50b8cce4fd5e751e
         with:
           context: .
           file: ./Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+<<<<<<< HEAD
+=======
           platforms: linux/amd64,linux/arm64
+>>>>>>> 9ca9ddd5a27b7b5a91f0ab2a50b8cce4fd5e751e
 
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v2
