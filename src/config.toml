@@ -1,6 +1,6 @@
 [database]
 DB_HOST = "funnywol_DB"
-DB_USER = "proxrm_admin"
+DB_USER = "root"
 DB_PASSWORD = "Start123#"
 DB_DATABASE = "wolserver"
 DB_PORT = 3306
@@ -13,8 +13,8 @@ PROX_SECRET = "238c1131-ceb6-4bc6-9f90-1e558cf6cdb4"
 MAC = "6C:AE:8B:36:5F:A2"
 
 [proxrm_server]
-HOST = "192.168.178.19"
-PORT = 35560
+HOST = "0.0.0.0"
+PORT = 3580
 
 [logging]
 LOGFILE = "XXX.log"

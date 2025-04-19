@@ -6,6 +6,6 @@ from python:latest
   COPY . /opt/app/
   WORKDIR /opt/app/src
 
-  RUN python -m pip install pymysql bcrypt urllib3 uuid requests logging wakeonlan
+  RUN python -m pip install pymysql bcrypt urllib3 uuid requests logging wakeonlan tomli cryptography
 
   CMD ["python", "controller.py"]
