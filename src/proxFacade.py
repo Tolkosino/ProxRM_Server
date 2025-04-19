@@ -26,7 +26,8 @@ class ProxFacade:
             else:
                 return "Access Denied"
         elif command in CommandFactory.get_commands() and command in ["login","logout"]:
+                self.logger.debug("This is in correct if for login")
                 command = CommandFactory.create_command(command)
                 res = command.execute(vmid=vmid, action=action, session_id=session_id)
-
+        self.logger.debug(f"this is res {res}")
         return "FAILURE IN COMMAND EXECUTION" if res is None else res
