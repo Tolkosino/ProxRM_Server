@@ -1,6 +1,6 @@
 [database]
 DB_HOST = "funnywol_DB"
-DB_USER = "proxrm_admin"
+DB_USER = "root"
 DB_PASSWORD = "Start123#"
 DB_DATABASE = "wolserver"
 DB_PORT = 3306
