@@ -3,7 +3,9 @@ from classes.commands.commandBase import CommandBase
 class login(CommandBase):
 
     def execute(self, **kwargs):
+        self.logger.debug("This is before DB_User import")
         from classes.db.user import DB_User
+        self.logger.debug("This is after import")
         username = kwargs.get("action")
         password = kwargs.get("vmid")
         self.logger.debug(f"{username}, {password}")
@@ -17,3 +19,4 @@ class login(CommandBase):
         else:
             self.logger.debug(f"{username} provided wrong password.")
             return f"authn_{password}_deny" ##Login denied
+        self.logger.debug("This is basically impossible")
