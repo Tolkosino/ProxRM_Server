@@ -3,15 +3,16 @@ from classes.commands.commandBase import CommandBase
 class login(CommandBase):
 
     def execute(self, **kwargs):
-        self.logger.debug("This is before DB_User import")
         from classes.db.user import DB_User
-        self.logger.debug("This is after import")
+
+        self.logger.debug(f"{self.__name__} kwargs be like: ")
+        for i, v in kwargs.items():
+            self.logger.debug(f"{i} with value {v} ")
+
         username = kwargs.get("action")
         password = kwargs.get("vmid")
-        self.logger.debug(f"{username}, {password}")
 
         session_id = DB_User().login_user(username, password)
-        self.logger.debug(f"{session_id}")
 
         if not session_id == "WRONG PASSWORD":
             self.logger.debug(f"{username} authenticated.")
