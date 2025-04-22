@@ -6,6 +6,10 @@ class get_vmstatus(CommandBase):
         import requests
         vmid = kwargs.get("vmid")
 
+        self.logger.debug(f"{self.__name__} kwargs be like: ")
+        for i, v in kwargs.items():
+            self.logger.debug(f"{i} with value {v} ")
+
         """Retrieve the status of a specific VM."""
         url = f"https://{self.prox_host}:8006/api2/json/nodes/{self.nodename}/qemu/{vmid}/status/current"
 
@@ -13,6 +17,10 @@ class get_vmstatus(CommandBase):
             response = requests.get(url, headers=self.headers, verify=False)
             response.raise_for_status()
             data = response.json().get('data', {})
+            self.logger.debug(f"imagine, data pulled from vm be like: ")
+                    for i, v in data.items():
+                        self.logger.debug(f"{i} with value {v} ")
+    
             status = {
                 "status": data.get("qmpstatus"),
                 "maxmem_GB": data.get("maxmem", 0) / 1e9,
@@ -24,6 +32,9 @@ class get_vmstatus(CommandBase):
                 "cpus": data.get("cpus"),
                 "uptime": data.get("uptime")
             }
+
+            self.logger.debug(f"returning: {status} ")
+
             return status
         
         except requests.RequestException as e:
