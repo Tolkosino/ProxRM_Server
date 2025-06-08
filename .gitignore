@@ -3,7 +3,7 @@ __pycache__/
 
 #internal information
 backlog
-
+debug
 
 # Distribution / packaging
 .Python
