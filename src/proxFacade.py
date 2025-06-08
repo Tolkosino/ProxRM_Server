@@ -45,7 +45,7 @@ class ProxFacade:
         headers = {
             "Authorization": f"PVEAPIToken={prox_token}={prox_secret}"
         }
-        
+    
         url = f"https://{prox_host}:8006/api2/json/cluster/resources?type=vm"
 
         try:
