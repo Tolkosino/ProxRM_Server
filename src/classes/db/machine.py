@@ -61,8 +61,8 @@ class DB_Machine:
         """Synchronizes the local database with Proxmox VMs."""
         self.logger.info("Starting update of local VM database")
         machines = None
-
-        machines = ProxFacade.get_all_vms()
+        proxfacade = ProxFacade()
+        machines = proxfacade.get_all_vms()
         self.logger.debug(f"VM-Set collected from Proxmox: {machines}")
 
         dict_machines = dict()
