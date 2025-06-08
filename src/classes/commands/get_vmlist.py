@@ -5,7 +5,7 @@ class get_vmlist(CommandBase):
     def execute(self, **kwargs):
         from classes.db.user import DB_User
         
-        self.logger.debug(f"{self.__name__} kwargs be like: ")
+        self.logger.debug(f"get_vmlist kwargs be like: ")
         for i, v in kwargs.items():
             self.logger.debug(f"{i} with value {v} ")
 

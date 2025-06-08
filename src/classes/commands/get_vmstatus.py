@@ -6,7 +6,7 @@ class get_vmstatus(CommandBase):
         import requests
         vmid = kwargs.get("vmid")
 
-        self.logger.debug(f"{self.__name__} kwargs be like: ")
+        self.logger.debug(f"get_vmstatus kwargs be like: ")
         for i, v in kwargs.items():
             self.logger.debug(f"{i} with value {v} ")
 
