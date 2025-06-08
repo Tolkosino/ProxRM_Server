@@ -18,8 +18,8 @@ class get_vmstatus(CommandBase):
             response.raise_for_status()
             data = response.json().get('data', {})
             self.logger.debug(f"imagine, data pulled from vm be like: ")
-                    for i, v in data.items():
-                        self.logger.debug(f"{i} with value {v} ")
+            for i, v in data.items():
+                self.logger.debug(f"{i} with value {v} ")
     
             status = {
                 "status": data.get("qmpstatus"),
