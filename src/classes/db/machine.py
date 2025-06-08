@@ -65,25 +65,21 @@ class DB_Machine:
         machines = proxfacade.get_all_vms()
         self.logger.debug(f"VM-Set collected from Proxmox: {machines}")
 
-        dict_machines = dict()
         current_existent_vms = set()
-        
-        for machine in machines:
-            dict_machines[machine[0]] = {"tags": machine[1], "name": machine[2]}
 
         with DatabaseConnection(self.DATABASE_INFO) as cursor:
-            for vm, details in dict_machines.items():
-                cursor.execute("SELECT id FROM wol_machines WHERE id = %s", (vm,))
+            for vmid, details in machines.items():
+                cursor.execute("SELECT id FROM wol_machines WHERE id = %s", (vmid,))
                 exists = cursor.fetchone()
 
                 vm_name = details.get("name", "")
                 vm_tags = details.get("tags", "")
 
                 if exists:
-                    self.local_update_vm(vm_name, vm_tags, vm)
+                    self.local_update_vm(vm_name, vm_tags, vmid)
                 else:
-                    self.local_add_vm(vm, vm_name, vm_tags)
+                    self.local_add_vm(vmid, vm_name, vm_tags)
 
-                current_existent_vms.add(vm)
+                current_existent_vms.add(vmid)
 
         self._remove_deleted_vms(current_existent_vms)
