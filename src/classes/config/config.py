@@ -6,7 +6,7 @@ class Config():
          self._load()
 
     def _load(self):
-        with open("config.toml", mode="rb") as fp:
+        with open("src/config.toml", mode="rb") as fp:
             self.config = tomli.load(fp)
             self._set_logLevel()
         

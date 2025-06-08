@@ -31,3 +31,33 @@ class ProxFacade:
                 res = command.execute(vmid=vmid, action=action, session_id=session_id)
         self.logger.debug(f"this is res {res}")
         return "FAILURE IN COMMAND EXECUTION" if res is None else res
+    
+    def get_all_vms(self):
+        """Retrieve all VMs from the cluster."""
+        from classes.config.config import Config
+        import requests
+
+        conf = Config()
+        conf_proxmox = conf.get_proxmox()
+        prox_token = conf_proxmox["PROX_TOKEN"]
+        prox_secret = conf_proxmox["PROX_SECRET"]
+        prox_host = conf_proxmox["PROX_HOST"]
+        headers = {
+            "Authorization": f"PVEAPIToken={prox_token}={prox_secret}"
+        }
+        
+        url = f"https://{prox_host}:8006/api2/json/cluster/resources?type=vm"
+
+        try:
+            response = requests.get(url, headers=headers, verify=False)
+            response.raise_for_status()
+            vms = {}
+
+            for vm in response.json().get('data', []):
+                vms[vm['vmid']] = {"name": vm['name'], "tags": vm.get('tags', [])}
+
+            return vms
+
+        except requests.RequestException as e:
+            self.logger.critical(f"Failed to fetch VMs: {e}")
+            raise RuntimeError(f"Failed to fetch VMs: {e}")

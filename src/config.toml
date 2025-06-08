@@ -1,5 +1,5 @@
 [database]
-DB_HOST = "funnywol_DB"
+DB_HOST = "192.168.178.34"
 DB_USER = "root"
 DB_PASSWORD = "Start123#"
 DB_DATABASE = "wolserver"
