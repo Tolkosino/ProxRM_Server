@@ -1,5 +1,5 @@
-from src.classes.db.helper import DatabaseConnection
-from src.classes.config.config import Config
+from classes.db.helper import DatabaseConnection
+from classes.config.config import Config
 import uuid
 import bcrypt
 import logging
