@@ -1,4 +1,4 @@
-from src.classes.db.user import DB_User
+from classes.db.user import DB_User
 
 user = DB_User()
 
