@@ -4,6 +4,7 @@ from classes.db.controller import DB_Controller
 from classes.db.machine import DB_Machine
 from classes.config.config import Config
 from classes.loader import registry
+
 def main():
     """Setup and main execution loop."""
     config = Config()
