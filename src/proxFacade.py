@@ -24,9 +24,9 @@ class ProxFacade:
                 self.logger.debug(f"{userId} has permissions")
                 command = CommandFactory.create_command(command)
                 res = command.execute(vmid=vmid, action=action, session_id=session_id)
-            elif userId and command == "get_vmlist":                
+            elif userId and command in ["set_hostaction","get_vmlist"]:
                 command = CommandFactory.create_command(command)
-                res = command.execute(action=action, session_id=session_id)
+                res = command.execute(vmid=vmid, action=action, session_id=session_id)
             else:
                 return "Access Denied"
             
