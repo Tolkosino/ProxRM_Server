@@ -32,7 +32,7 @@ class DB_Machine:
         with DatabaseConnection(self.DATABASE_INFO) as cursor:
             cursor.execute("SELECT name FROM wol_nodes")
             local_existent_nodes = {row[0] for row in cursor.fetchall()}  # Use a set for fast lookups
-
+            #Could break cause Set vs List
         delta_to_delete_nodes = local_existent_nodes - prox_existent_nodes
         for node in delta_to_delete_nodes:
             self.local_delete_node(node)
@@ -73,6 +73,16 @@ class DB_Machine:
             )
         self.logger.info(f"Added machine to DB (ID {vmid})")
 
+    def local_add_node(self, node):
+        """Adds a new VM entry to the local database."""
+        with DatabaseConnection(self.DATABASE_INFO) as cursor:
+            self.logger.debug(f"trying to add node with following Infos provided - name: {node}")
+            cursor.execute(
+                "INSERT INTO wol_nodes (name) VALUES (%s)",
+                (node),
+            )
+        self.logger.info(f"Added node to DB (ID {node})")
+
     def reload_local_database(self):
         """Synchronizes the local database with Proxmox VMs."""
         self.logger.info("Starting update of local VM database")
@@ -91,10 +101,9 @@ class DB_Machine:
                 cursor.execute("SELECT name FROM wol_nodes WHERE name = %s", (node,))
                 exists = cursor.fetchone()
 
-                if exists:
-                    self.local_update_node(node)
-                else:
+                if not exists:
                     self.local_add_node(node)
+
                 current_existent_nodes.append(node)
 
             for vmid, details in machines.items():
