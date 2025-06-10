@@ -130,8 +130,26 @@ class DB_User:
             result = cursor.fetchone()
             return result[0] if result else None
 
+    def _vmId_is_node(self, vmId):
+        with DatabaseConnection(self.DATABASE_INFO) as cursor:
+            cursor.execute("SELECT tags FROM wol_machines WHERE id = %s", (vmId,))
+            vm_tags = cursor.fetchone()
+            if type(vm_tags) is type(None):
+                cursor.execute("SELECT name FROM wol_nodes WHERE name = %s", (vmId,))
+                vm_hosts = cursor.fetchone()
+                if type(vm_hosts) is not type(None):
+                    self.logger.debug("Request collected for node")
+                    return True
+            else:
+                self.logger.debug("Request collected for qemu")
+                return False
+
+        self.logger.warning(f"Node/QEMU action requested for ID {vmId}.")
+        return "ERROR ON NODE/QEMU REQUEST - NOT REGISTERED ID SUBMITTED"
+
     def check_permissions(self, user_id, vmId):
-        """Checks if the user has permission to access a given virtual machine."""
+        """Checks if the user has permission to access a given node/qemu."""
+        
         with DatabaseConnection(self.DATABASE_INFO) as cursor:
             cursor.execute("SELECT permissions FROM wol_users WHERE id = %s", (user_id,))
             user_permissions = cursor.fetchone()
@@ -139,12 +157,21 @@ class DB_User:
             if user_permissions and "admin" in user_permissions[0]:
                 return True
             
-            cursor.execute("SELECT tags FROM wol_machines WHERE id = %s", (vmId,))
-            vm_tags = cursor.fetchone()
-            self.logger.debug(f"Permissioncheck for vm with id {vmId} results in folowing permissions: {vm_tags}")
-            if not vm_tags or not user_permissions:
-                return False
-            return bool(set(user_permissions[0].split(',')) & set(vm_tags[0].split(',')))
+            if not self._vmId_is_node(vmId):
+                cursor.execute("SELECT tags FROM wol_machines WHERE id = %s", (vmId,))
+                vm_tags = cursor.fetchone()
+                self.logger.debug(f"Permissioncheck for vm with id {vmId} results in folowing permissions: {vm_tags}")
+                if not vm_tags or not user_permissions:
+                    return False
+                return bool(set(user_permissions[0].split(',')) & set(vm_tags[0].split(',')))
+            
+            elif self._vmId_is_node(vmId):
+                cursor.execute("SELECT name FROM wol_nodes WHERE name = %s", (vmId,))
+                vm_nodes = cursor.fetchone()
+                self.logger.debug(f"Permissioncheck for node with id {vmId} results in folowing permissions: {vm_nodes}")
+                if not vm_nodes or not user_permissions:
+                    return False
+                return bool(set(user_permissions[0].split(',')) & set(vm_nodes[0].split(',')))
 
     def get_vms_for_perms_of_user(self, user_id):
         """Returns all virtual machines a user has permission to access."""

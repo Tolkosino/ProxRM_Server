@@ -46,7 +46,8 @@ class DB_Controller:
                 CREATE TABLE IF NOT EXISTS wol_users (
                     id INT AUTO_INCREMENT PRIMARY KEY, 
                     username VARCHAR(255) NOT NULL, 
-                    permissions VARCHAR(255), 
+                    permissions VARCHAR(255),
+                    host_permissions VARCHAR(255), 
                     password VARCHAR(255) NOT NULL, 
                     session_id VARCHAR(255)
                 )
@@ -57,6 +58,13 @@ class DB_Controller:
                     id INT PRIMARY KEY, 
                     name VARCHAR(255) NOT NULL, 
                     tags VARCHAR(255)
+                )
+            """)
+
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS wol_nodes (
+                    id INT AUTO_INCREMENT PRIMARY KEY, 
+                    name VARCHAR(255) NOT NULL
                 )
             """)
 
