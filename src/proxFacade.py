@@ -66,3 +66,35 @@ class ProxFacade:
         except requests.RequestException as e:
             self.logger.critical(f"Failed to fetch VMs: {e}")
             raise RuntimeError(f"Failed to fetch VMs: {e}")
+        
+
+    def get_all_nodes(self):
+        """Retrieve all VMs from the cluster."""
+        from classes.config.config import Config
+        import requests
+
+        conf = Config()
+        conf_proxmox = conf.get_proxmox()
+        prox_token = conf_proxmox["PROX_TOKEN"]
+        prox_secret = conf_proxmox["PROX_SECRET"]
+        prox_host = conf_proxmox["PROX_HOST"]
+        headers = {
+            "Authorization": f"PVEAPIToken={prox_token}={prox_secret}"
+        }
+    
+        url = f"https://{prox_host}:8006/api2/json/cluster/resources?type=node"
+
+        try:
+            response = requests.get(url, headers=headers, verify=False)
+            response.raise_for_status()
+            nodes = []
+
+            for node in response.json().get('data', []):
+                nodes.append(node["node"])
+
+            return nodes
+
+        except requests.RequestException as e:
+            self.logger.critical(f"Failed to fetch Nodes: {e}")
+            raise RuntimeError(f"Failed to fetch Nodes: {e}")
+        

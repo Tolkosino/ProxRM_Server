@@ -27,6 +27,22 @@ class DB_Machine:
         for vmid in delta_to_delete_vms:
             self.local_delete_vm(vmid)
 
+    def _remove_deleted_nodes(self, prox_existent_nodes):
+        """Removes VMs from the local database that no longer exist in Proxmox."""
+        with DatabaseConnection(self.DATABASE_INFO) as cursor:
+            cursor.execute("SELECT name FROM wol_nodes")
+            local_existent_nodes = {row[0] for row in cursor.fetchall()}  # Use a set for fast lookups
+
+        delta_to_delete_nodes = local_existent_nodes - prox_existent_nodes
+        for node in delta_to_delete_nodes:
+            self.local_delete_node(node)
+
+    def local_delete_node(self, node):
+        """Deletes a VM by ID in the local database."""
+        with DatabaseConnection(self.DATABASE_INFO) as cursor:
+            cursor.execute("DELETE FROM wol_nodes WHERE name = %s", (node,))
+        self.logger.info(f"Deleted node from DB (name {node})")
+
     def local_delete_vm(self, vmid):
         """Deletes a VM by ID in the local database."""
         with DatabaseConnection(self.DATABASE_INFO) as cursor:
@@ -63,11 +79,24 @@ class DB_Machine:
         machines = None
         proxfacade = ProxFacade()
         machines = proxfacade.get_all_vms()
+        nodes = proxfacade.get_all_nodes()
         self.logger.debug(f"VM-Set collected from Proxmox: {machines}")
 
         current_existent_vms = set()
+        current_existent_nodes = []
+
 
         with DatabaseConnection(self.DATABASE_INFO) as cursor:
+            for node in nodes:
+                cursor.execute("SELECT name FROM wol_nodes WHERE name = %s", (node,))
+                exists = cursor.fetchone()
+
+                if exists:
+                    self.local_update_node(node)
+                else:
+                    self.local_add_node(node)
+                current_existent_nodes.append(node)
+
             for vmid, details in machines.items():
                 cursor.execute("SELECT id FROM wol_machines WHERE id = %s", (vmid,))
                 exists = cursor.fetchone()
@@ -83,3 +112,4 @@ class DB_Machine:
                 current_existent_vms.add(vmid)
 
         self._remove_deleted_vms(current_existent_vms)
+        self._remove_deleted_nodes(current_existent_nodes)

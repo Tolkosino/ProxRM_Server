@@ -156,7 +156,7 @@ class DB_User:
             self.logger.debug(f"Permissioncheck with userid {user_id} got this permissions {user_permissions}")
             if user_permissions and "admin" in user_permissions[0]:
                 return True
-            
+                
             if not self._vmId_is_node(vmId):
                 cursor.execute("SELECT tags FROM wol_machines WHERE id = %s", (vmId,))
                 vm_tags = cursor.fetchone()
