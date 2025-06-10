@@ -154,6 +154,7 @@ class DB_User:
             cursor.execute("SELECT permissions FROM wol_users WHERE id = %s", (user_id,))
             user_permissions = cursor.fetchone()
             self.logger.debug(f"Permissioncheck with userid {user_id} got this permissions {user_permissions}")
+
             if user_permissions and "admin" in user_permissions[0]:
                 return True
                 
