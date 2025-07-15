@@ -31,15 +31,10 @@ class DB_Machine:
         """Removes VMs from the local database that no longer exist in Proxmox."""
         with DatabaseConnection(self.DATABASE_INFO) as cursor:
             cursor.execute("SELECT name FROM wol_nodes") 
+            delta_to_delete_nodes = [node for node in [row[0] for row in cursor.fetchall()] if node not in prox_existent_nodes]
 
-            delta_to_delete_nodes = [node for node in cursor.fetchall()[0] if node not in prox_existent_nodes]
-            logging.debug(f"Tobias -> {delta_to_delete_nodes}")
-
-            delta_to_delete_nodes2 = [node for node in [row[0] for row in cursor.fetchall()] if node not in prox_existent_nodes]
-            logging.debug(f"Joshua -> {delta_to_delete_nodes2}")
-
-        #for node in delta_to_delete_nodes:
-            #self.local_delete_node(node)
+        for node in delta_to_delete_nodes:
+            self.local_delete_node(node)
 
 
     def local_delete_node(self, node):

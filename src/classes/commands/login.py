@@ -13,6 +13,5 @@ class login(CommandBase):
             self.logger.debug(f"{username} logged in.")
             return f"authn_{username}_accept;{session_id}"
         else:
-            self.logger.debug(f"{username} wrong credentials.")
-            return f"authn_{password}_deny" 
-
+            return f"authn_{username}_deny" ##Login denied
+        self.logger.debug("This is basically impossible")

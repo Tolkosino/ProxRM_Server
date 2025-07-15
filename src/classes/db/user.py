@@ -93,7 +93,7 @@ class DB_User:
                 return self._create_session_id(user_id)
             else:
                 self.logger.info(f"Wrong password for user: {username}")
-                return "WRONG PASSWORD"
+                return None
 
     def _create_session_id(self, user_id):
         """Generates a new session ID and updates the user session."""
@@ -123,7 +123,7 @@ class DB_User:
             result = cursor.fetchone()
             return result[0] if result else None
 
-    def get_user_id_by_session_id(self, session_id):
+    def _get_user_id_by_session_id(self, session_id):
         """Retrieves the user ID associated with a given session ID."""
         with DatabaseConnection(self.DATABASE_INFO) as cursor:
             cursor.execute("SELECT id FROM wol_users WHERE session_id = %s", (session_id,))
@@ -154,6 +154,7 @@ class DB_User:
             cursor.execute("SELECT permissions FROM wol_users WHERE id = %s", (user_id,))
             user_permissions = cursor.fetchone()
             self.logger.debug(f"Permissioncheck with userid {user_id} got this permissions {user_permissions}")
+
             if user_permissions and "admin" in user_permissions[0]:
                 return True
                 
@@ -192,7 +193,7 @@ class DB_User:
                 return accessible_vms
 
     def check_session_id(self, session_id):
-        userid = self.get_user_id_by_session_id(session_id)
+        userid = self._get_user_id_by_session_id(session_id)
         if userid:
             return True
         return False
