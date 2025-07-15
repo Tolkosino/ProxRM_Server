@@ -5,19 +5,14 @@ class login(CommandBase):
     def execute(self, **kwargs):
         from classes.db.user import DB_User
 
-        self.logger.debug(f"login kwargs be like: ")
-        for i, v in kwargs.items():
-            self.logger.debug(f"{i} with value {v} ")
-
         username = kwargs.get("action")
         password = kwargs.get("vmid")
-
         session_id = DB_User().login_user(username, password)
 
-        if not session_id == "WRONG PASSWORD":
-            self.logger.debug(f"{username} authenticated.")
-            return f"authn_{username}_accept;{session_id}" ##User authenticated
+        if session_id is not None:
+            self.logger.debug(f"{username} logged in.")
+            return f"authn_{username}_accept;{session_id}"
         else:
-            self.logger.debug(f"{username} provided wrong password.")
-            return f"authn_{password}_deny" ##Login denied
-        self.logger.debug("This is basically impossible")
+            self.logger.debug(f"{username} wrong credentials.")
+            return f"authn_{password}_deny" 
+

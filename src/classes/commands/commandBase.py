@@ -26,8 +26,6 @@ class CommandBase:
         }
 
     # Abstract method that must be implemented by subclasses.
-    # This is meant to be overridden by plugin-specific logic to send messages.
-    # If not implemented in the subclass, a NotImplementedError will be raised.
 
     def execute(self, **kwargs):
         raise NotImplementedError("Subclasses should implement this method.")
