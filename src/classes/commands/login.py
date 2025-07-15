@@ -14,10 +14,9 @@ class login(CommandBase):
 
         session_id = DB_User().login_user(username, password)
 
-        if not session_id == "WRONG PASSWORD":
+        if session_id is not None:
             self.logger.debug(f"{username} authenticated.")
             return f"authn_{username}_accept;{session_id}" ##User authenticated
         else:
-            self.logger.debug(f"{username} provided wrong password.")
-            return f"authn_{password}_deny" ##Login denied
+            return f"authn_{username}_deny" ##Login denied
         self.logger.debug("This is basically impossible")

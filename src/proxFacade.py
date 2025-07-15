@@ -16,7 +16,7 @@ class ProxFacade:
         command = command.lower()
         
         if command not in ["login","logout"]:
-            userId = DB_User().get_user_id_by_session_id(session_id)
+            userId = DB_User()._get_user_id_by_session_id(session_id)
             
             self.logger.debug(CommandFactory.get_commands())
 
